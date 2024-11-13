@@ -1,0 +1,10 @@
+@mixin focus($color: currentColor) {
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px dashed $color;
+    outline-offset: 3px;
+  }
+}

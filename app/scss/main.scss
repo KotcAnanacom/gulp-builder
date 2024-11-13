@@ -1,0 +1,18 @@
+@use "base" as *;
+@use "mixins" as *;
+@use "fonts" as *;
+@use "settings" as *;
+
+// чтобы перебить стили,если это нужно
+
+// для маленьких компонентов
+
+
+// для больших компонентов
+
+@use "./components/header" as *;
+@use "./components/footer" as *;
+
+
+// libs
+
