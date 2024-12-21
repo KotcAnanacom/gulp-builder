@@ -2,10 +2,17 @@ $white: #fff;
 $black: #000;
 
 // offsets
-$offset: 20px;
+$offset: 1.25rem;
+
+// width and height website
+$width-web: 1920px;
+$width-min-web: 360px;
+$height-web: 1080px;
+
 
 
 :root {
 	--container: 1230px;
 	--container-offset: 15px;
+	--transition: 0.3s ease-in;
 }

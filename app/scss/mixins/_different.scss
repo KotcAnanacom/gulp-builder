@@ -24,21 +24,3 @@
 	transition: $param $speed $anim;
 }
 
-@function fluid-block($max-block: 500, $min-block: 300, $max-vw: 1920, $min-vw: 360) {
-  $block: $max-block - $min-block;
-  $viewport: $max-vw - $min-vw;
-  @return clamp(#{$min-block}px, calc(#{$min-block}px + #{$block} * (100vw - #{$min-vw}px) / #{$viewport}), #{$max-block}px);
-}
-
-@function vw($px, $base: 1920) {
-  @return #{math.div($px, $base) * 100vw};
-}
-
-@function vh($px, $base: 1080) {
-  @return #{math.div($px, $base) * 100vh};
-}
-
-@function rem($px) {
-	$rem: 16;
-  @return #{math.div($px, $rem)}rem;
-}

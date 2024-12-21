@@ -5,6 +5,7 @@
 	margin: 0;
   font-family: "test", sans-serif;
   font-weight: 400;
+	line-height: 1.5;
   background-color: $white;
 }
 
@@ -104,16 +105,3 @@
 .m-reset {
 	margin: 0;
 }
-
-/* ::-webkit-scrollbar{
-  width: 13px;
-}
-
-::-webkit-scrollbar-track{
-  background: #f5f5f5;
-}
-
-::-webkit-scrollbar-thumb{
-  border-radius: 7px;
-  background: linear-gradient(#0066ff, rgb(182, 182, 182));
-} */

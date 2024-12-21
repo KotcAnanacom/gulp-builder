@@ -39,60 +39,61 @@ const path = {
 
 // plugins
 
-import { parallel, src, dest, series, watch } from 'gulp';
+import { dest, parallel, series, src, watch } from 'gulp'
 
 // html
-import include from 'gulp-file-include';
-import typograf from 'gulp-typograf';
-import prettyHtml from 'gulp-pretty-html';
-import htmlMin from 'gulp-htmlmin';
-import gulpHtmlBemValidator from 'gulp-html-bem-validator';
-import htmlhint from 'gulp-htmlhint';
+import include from 'gulp-file-include'
+import gulpHtmlBemValidator from 'gulp-html-bem-validator'
+import htmlhint from 'gulp-htmlhint'
+import htmlMin from 'gulp-htmlmin'
+import prettyHtml from 'gulp-pretty-html'
+import typograf from 'gulp-typograf'
+import { w3cHtmlValidator } from 'w3c-html-validator'
 
 // scss
-import cleanCss from 'gulp-clean-css';
+import autoprefixer from 'gulp-autoprefixer'
+import cleanCss from 'gulp-clean-css'
+import cssBeautify from 'gulp-cssbeautify'
+import postcss from 'gulp-postcss'
+import gulpSass from 'gulp-sass'
+import cssComments from 'gulp-strip-css-comments'
+import sortMedia from 'postcss-combine-media-query'
 import * as dartSass from 'sass';
-import gulpSass from 'gulp-sass';
-import autoprefixer from 'gulp-autoprefixer';
-import cssComments from 'gulp-strip-css-comments';
-import cssBeautify from 'gulp-cssbeautify';
-import sortMedia from 'postcss-combine-media-query';
-import postcss from 'gulp-postcss';
 const sass = gulpSass(dartSass);
 
 // js
-import webpackStream from 'webpack-stream';
-import uglify from "gulp-uglify-es";
-import eslint from 'gulp-eslint';
+import eslint from 'gulp-eslint'
+import uglify from "gulp-uglify-es"
+import webpackStream from 'webpack-stream'
 
 // images
-import svgSprite from 'gulp-svg-sprite';
-import svgMin from 'gulp-svgmin';
-import imageMin from 'gulp-imagemin';
-import newer from 'gulp-newer';
-import webp from 'gulp-webp';
-import avif from 'gulp-avif';
-import img_to_picture from "gulp_img_transform_to_picture";
+import avif from 'gulp-avif'
+import imageMin from 'gulp-imagemin'
+import newer from 'gulp-newer'
+import svgSprite from 'gulp-svg-sprite'
+import svgMin from 'gulp-svgmin'
+import webp from 'gulp-webp'
+import img_to_picture from "gulp_img_transform_to_picture"
 
 // cache
-import cache from 'gulp-cache';
+import cache from 'gulp-cache'
 
 // fonts
-import fonter from 'gulp-fonter-fix';
-import woff2 from 'gulp-ttf2woff2';
+import fonter from 'gulp-fonter-fix'
+import woff2 from 'gulp-ttf2woff2'
 
 // others
-import pathRoot from 'path';
-import browserSync from 'browser-sync';
-import gulpIf from 'gulp-if';
-import plumber from 'gulp-plumber';
-import notify from 'gulp-notify';
-import rename from 'gulp-rename';
-import del from 'del';
-import gulpZip from 'gulp-zip';
-import cheerio from 'gulp-cheerio';
-import replace from 'gulp-replace';
-import fs from 'fs';
+import browserSync from 'browser-sync'
+import { deleteAsync } from 'del'
+import fs from 'fs'
+import cheerio from 'gulp-cheerio'
+import gulpIf from 'gulp-if'
+import notify from 'gulp-notify'
+import plumber from 'gulp-plumber'
+import rename from 'gulp-rename'
+import replace from 'gulp-replace'
+import gulpZip from 'gulp-zip'
+import pathRoot from 'path'
 
 const rootFolder = pathRoot.basename(pathRoot.resolve());
 
@@ -103,12 +104,13 @@ const isPrev = process.argv.includes('--prev');
 // function
 
 export const clean = () => {
-  return del(path.clean)
+  return deleteAsync(path.clean)
 };
 
 export const cacheTask = () => {
   return cache.clearAll()
 };
+
 
 export const html = () => {
 	const config_pic = {
@@ -118,6 +120,16 @@ export const html = () => {
 			jpeg: true
 		}
 	};
+	if (fs.existsSync(buildFolder)) {
+		const htmlFiles = fs.readdirSync(buildFolder).filter(file => file.endsWith('.html'))
+
+		htmlFiles.map(file => {
+			return w3cHtmlValidator.validate({ filename: pathRoot.join(buildFolder, file) })
+				.then(w3cHtmlValidator.reporter)
+				.catch(error => console.error(`Validation error in ${file}:`, error))
+		})
+	}
+
   return src(path.app.html)
   .pipe(plumber(notify.onError({
     title: "HTML",
@@ -186,7 +198,12 @@ export const js = () => {
         	loader: 'babel-loader',
         	options: {
           	presets: [['@babel/preset-env', { targets: "defaults" }]
-  ]}}}]},
+  ]}}},
+	{
+		test: /\.css$/i,
+		use: ['style-loader', 'css-loader'],
+	}
+	]},
 	devtool: !isProd ? 'source-map' : false})).on('error', function (err) {console.error('WEBPACK ERROR', err);this.emit('end');})
 	.pipe(gulpIf(isProd, uglify.default()))
 	.pipe(dest(path.build.js))
