@@ -147,8 +147,10 @@ git branch -M main
 git remote add origin https://github.com/{Ваш username}/{Название репозитория который вы создали}.git
 git push -u origin main
 ```
+
 `git commit -m 'upload'` - название коммита может быть любым
-`git remote add origin https://github.com/{Ваш username}/{Название репозитория который вы создали}.git` - замените `{Ваш_пользователь}` и `{Название_репозитория}` на нужные значения из вашего репозитория. Ссылку можно взять в репозитории
+
+`git remote add origin https://github.com/{Ваш username}/{Название репозитория который вы создали}.git` - замените _{Ваш_пользователь}_ и _{Название_репозитория}_ на нужные значения из вашего репозитория. Ссылку можно взять в репозитории
 ![image](https://i.imgur.com/6ZZItLo.png)
 или 
 ![image](https://i.imgur.com/tfP8ihI.png)
