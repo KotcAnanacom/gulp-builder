@@ -6,19 +6,25 @@
 		"es6": true
 	},
 	"parserOptions": {
+		"ecmaVersion": 11,
 		"sourceType": "module"
 	},
-	"extends": "eslint:recommended",
+	"extends": ["eslint:recommended", "plugin:import/recommended"],
+
 	"rules": {
-		"semi": "warn",
+		"semi": "off",
+		"semicolon": "off",
 		"quotes": ["warn", "single"],
 		"no-unused-vars": "error",
-		"indent": ["error", 2],
+		"indent": ["error", "tab", {"SwitchCase": 1}],
+		"camelcase": "warn",
+		"no-var": "warn",
+		"comma-dangle": "off",
 		"comma-style": "warn",
 		"no-dupe-args": "error",
 		"no-dupe-keys": "error",
 		"no-duplicate-case": "error",
-		"no-empty": "error",
+		"no-empty": "off",
 		"no-empty-character-class": "error",
 		"no-ex-assign": "error",
 		"no-extra-boolean-cast": "error",
@@ -43,6 +49,7 @@
 		"no-fallthrough": "error",
 		"no-floating-decimal": "error",
 		"no-global-assign": "error",
+		"no-mixed-spaces-and-tabs": "error",
 		"no-implicit-coercion": "off",
 		"no-implicit-globals": "off",
 		"no-implied-eval": "error",

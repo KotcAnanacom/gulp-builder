@@ -5,7 +5,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 }
 
 html {
-	line-height: 1.4;
+	line-height: 1.5;
 	-webkit-text-size-adjust: 100%;
 }
 
@@ -13,7 +13,8 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-  -webkit-appearance: button;
+	-webkit-appearance: button;
+	appearance: button;
 }
 
 abbr[title] {
@@ -110,6 +111,7 @@ button {
 
 [type="search"] {
 	-webkit-appearance: textfield;
+	appearance: textfield;
 	outline-offset: -2px;
 }
 

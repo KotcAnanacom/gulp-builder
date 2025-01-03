@@ -1,5 +1,10 @@
 "use strict";
 
+// Выбирите на чем вы хотите работать, писать только "html" или "pug"
+const markupType = 'html'; // html или pug
+
+
+
 // path
 
 const appFolder = './app/';
@@ -8,8 +13,10 @@ const buildFolder = './dist/';
 const path = {
   app: {
     html: [`${appFolder}*.html`, `!${appFolder}_*.html`, `!${appFolder}blocks/*.html`],
+		pug: [`${appFolder}pug/pages/*.pug`, `!${appFolder}pug/pages/_*.pug`],
     css: `${appFolder}scss/main.scss`,
 		js: [`${appFolder}js/main.js`, `!${appFolder}js/_*.js`],
+		jslint: [`${appFolder}js/**/*.js`, `!${appFolder}js/libs/*.js`],
 		img: `${appFolder}images/**/**.{jpg,jpeg,png}`,
 		svg: [`${appFolder}images/**/*.svg`, `!${appFolder}images/sprite/`],
 		svgsprite: `${appFolder}images/sprite/*.svg`,
@@ -28,6 +35,7 @@ const path = {
 
   watch: {
     html: `${appFolder}**/*.html`,
+    pug: `${appFolder}pug/**/*.pug`,
     css: `${appFolder}scss/**/*.scss`,
 		js: `${appFolder}js/**/*.js`,
 		img: `${appFolder}images/**/*.{gif,webp,ico,avif,jpg,jpeg,png,svg}`,
@@ -42,13 +50,17 @@ const path = {
 import { dest, parallel, series, src, watch } from 'gulp'
 
 // html
+import { sync } from 'glob'
 import include from 'gulp-file-include'
 import gulpHtmlBemValidator from 'gulp-html-bem-validator'
-import htmlhint from 'gulp-htmlhint'
 import htmlMin from 'gulp-htmlmin'
 import prettyHtml from 'gulp-pretty-html'
 import typograf from 'gulp-typograf'
 import { w3cHtmlValidator } from 'w3c-html-validator'
+
+// pug
+import gulpPug from "gulp-pug"
+import gulpPugLinter from "gulp-pug-linter"
 
 // scss
 import autoprefixer from 'gulp-autoprefixer'
@@ -56,9 +68,10 @@ import cleanCss from 'gulp-clean-css'
 import cssBeautify from 'gulp-cssbeautify'
 import postcss from 'gulp-postcss'
 import gulpSass from 'gulp-sass'
+import sourcemaps from 'gulp-sourcemaps'
 import cssComments from 'gulp-strip-css-comments'
 import sortMedia from 'postcss-combine-media-query'
-import * as dartSass from 'sass';
+import * as dartSass from 'sass'
 const sass = gulpSass(dartSass);
 
 // js
@@ -84,8 +97,10 @@ import woff2 from 'gulp-ttf2woff2'
 
 // others
 import browserSync from 'browser-sync'
+import chalk from 'chalk'
 import { deleteAsync } from 'del'
 import fs from 'fs'
+import ghpage from "gh-pages"
 import cheerio from 'gulp-cheerio'
 import gulpIf from 'gulp-if'
 import notify from 'gulp-notify'
@@ -101,6 +116,11 @@ const rootFolder = pathRoot.basename(pathRoot.resolve());
 const isProd = process.argv.includes('--build');
 const isPrev = process.argv.includes('--prev');
 
+if (markupType !== 'html' && markupType !== 'pug') {
+  console.error(chalk.red.bold('markupType может быть только "html" или "pug"'))
+	process.exit(1)
+}
+
 // function
 
 export const clean = () => {
@@ -111,57 +131,94 @@ export const cacheTask = () => {
   return cache.clearAll()
 };
 
-
-export const html = () => {
-	const config_pic = {
+const config_pic = {
 		extensions: {
 			png: true,
 			jpg: true,
 			jpeg: true
 		}
-	};
-	if (fs.existsSync(buildFolder)) {
-		const htmlFiles = fs.readdirSync(buildFolder).filter(file => file.endsWith('.html'))
+};
 
-		htmlFiles.map(file => {
-			return w3cHtmlValidator.validate({ filename: pathRoot.join(buildFolder, file) })
+export const pug = () => {
+  return src(path.app.pug)
+    .pipe(plumber(notify.onError({
+      title: "PUG",
+      message: "Error: <%= error.message %>"
+    })))
+	.pipe(gulpPugLinter({reporter: 'default'}))
+	// Поменяйте pretty на true, если хотите не минифицированный html
+  .pipe(gulpPug({
+    pretty: !isProd,
+	  verbose: true
+    }))
+	.pipe(typograf({locale: ['ru', 'en-US']}))
+	.pipe(gulpHtmlBemValidator())
+	.pipe(replace(/#img\//g, 'images/'))
+	.pipe(gulpIf(isProd, img_to_picture(config_pic)))
+	// Удалите строку ниже, если не хотите, чтобы название файла было с суффиксом .min
+	.pipe(gulpIf(isProd, rename({suffix: '.min'})))
+  .pipe(dest(path.build.html))
+  .pipe(browserSync.stream());
+};
+
+export const html = () => {
+	if (markupType === 'pug') {
+		return pug()
+	}
+	else {
+		return src(path.app.html)
+		.pipe(plumber(notify.onError({
+			title: "HTML",
+			message: "Error: <%= error.message %>"
+		})))
+		.pipe(include({
+			prefix: '@',
+			basepath: '@file'
+		}))
+		.pipe(typograf({locale: ['ru', 'en-US']}))
+		.pipe(replace(/#img\//g, 'images/'))
+		.pipe(gulpIf(isProd, img_to_picture(config_pic)))
+		.pipe(prettyHtml({indent_size: 2}))
+		// Раскомментировать если требуется минифицированный и не минифицированный html
+		// .pipe(dest(path.build.html))
+		.pipe(gulpHtmlBemValidator())
+		.pipe(gulpIf(isProd, htmlMin({
+			collapseWhitespace: true,
+			removeComments: true
+		})))
+		.pipe(gulpIf(isProd, rename({suffix: '.min'})))
+		.pipe(dest(path.build.html))
+		.pipe(browserSync.stream())
+	}
+};
+
+export const validateHTML = () => {
+	if (!isProd) {
+		const htmlFiles = sync('dist/*.html');
+
+		htmlFiles.forEach(file => {
+			const options = {
+				filename: file
+			}
+
+			w3cHtmlValidator.validate(options)
 				.then(w3cHtmlValidator.reporter)
 				.catch(error => console.error(`Validation error in ${file}:`, error))
 		})
-	}
 
-  return src(path.app.html)
-  .pipe(plumber(notify.onError({
-    title: "HTML",
-    message: "Error: <%= error.message %>"
-  })))
-  .pipe(include({
-		prefix: '@',
-    basepath: '@file'
-  }))
-  .pipe(typograf({locale: ['ru', 'en-US']}))
-	.pipe(replace(/#img\//g, 'images/'))
-	.pipe(gulpIf(isProd, img_to_picture(config_pic)))
-  .pipe(prettyHtml({indent_size: 2}))
-	.pipe(htmlhint('.htmlhintrc'))
-	.pipe(htmlhint.reporter())
-  .pipe(dest(path.build.html))
-	.pipe(gulpHtmlBemValidator())
-  .pipe(gulpIf(isProd, htmlMin({
-		collapseWhitespace: true,
-    removeComments: true
-  })))
-  .pipe(gulpIf(isProd, rename({suffix: '.min'})))
-  .pipe(dest(path.build.html))
-  .pipe(browserSync.stream())
+		return Promise.resolve()
+	} else {
+		return Promise.resolve()
+	}
 };
 
 export const scss = () => {
-  return src(path.app.css, {sourcemaps: !isProd})
+  return src(path.app.css)
   .pipe(plumber(notify.onError({
     title: "SCSS",
     message: "Error: <%= error.message %>",
   })))
+	.pipe(gulpIf(!isProd, sourcemaps.init()))
   .pipe(sass({silenceDeprecations: ['legacy-js-api']}))
   .pipe(postcss([sortMedia({sort: 'desktop-first'})]))
   .pipe(autoprefixer({
@@ -173,7 +230,8 @@ export const scss = () => {
   .pipe(gulpIf(isProd, cssComments()))
   .pipe(gulpIf(isProd, cleanCss({level: 2})))
 	.pipe(replace(/#img\//g, '../images/'))
-  .pipe(dest(path.build.css, {sourcemaps: '.'}))
+	.pipe(gulpIf(!isProd, sourcemaps.write()))
+  .pipe(dest(path.build.css))
   .pipe(browserSync.stream())
 };
 
@@ -183,8 +241,6 @@ export const js = () => {
     title: "JS",
     message: "Error: <%= error.message %>"
   })))
-	.pipe(eslint())
-	.pipe(eslint.format())
 	.pipe(webpackStream({
 		mode: isProd ? 'production' : 'development',
 		output: {
@@ -208,6 +264,12 @@ export const js = () => {
 	.pipe(gulpIf(isProd, uglify.default()))
 	.pipe(dest(path.build.js))
 	.pipe(browserSync.stream())
+};
+
+export const jslint = () => {
+	return src(path.app.jslint)
+		.pipe(eslint())
+		.pipe(eslint.format('pretty'))
 };
 
 export const fonts = () => {
@@ -398,18 +460,32 @@ export const watcher = () => {
     port: 3000,
   });
   watch(path.watch.html, html);
+	watch('dist/*.html', validateHTML);
+	watch(path.watch.pug, pug);
   watch(path.watch.css, scss);
 	watch(path.watch.js, js);
+	watch(path.watch.js, jslint);
 	watch(path.watch.img, sprites);
 	watch(path.watch.img, images);
 	watch(path.watch.img, imagesCopy);
 	watch(path.watch.resource, resources);
 };
 
+export const ghpages = () => {
+	ghpage.publish('dist', {
+		branch: 'gh-pages'
+	}, (err) => {
+    if (err) {
+      console.error(chalk.red.bgGray('Ошибка при публикации:'), chalk.red(err))
+    } else {
+      console.log(chalk.green.bgBlueBright( 'Проект успешно опубликован на GitHub Pages!'))
+    }
+  })
+}
 
 // exports
 
-const build = series(clean, parallel(html, js, sprites, images, imagesCopy, resources, fonts), autoconnectfont, scss, cacheTask);
+const build = series(clean, parallel(html, js, sprites, images, imagesCopy, resources, fonts), autoconnectfont, scss, jslint, validateHTML, cacheTask);
 const serve = series(watcher);
 const go = series(build, watcher);
 

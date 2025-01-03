@@ -1,6 +1,6 @@
 {
 	"name": "gulp-building",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "gulp build for website layout",
 	"main": "gulpfile.js",
 	"type": "module",
@@ -17,29 +17,36 @@
 		"dev": "gulp",
 		"build": "gulp --build",
 		"preview": "gulp --prev",
-		"validate": "html-validator dist/*.html"
+		"stylelint": "npx stylelint **/*.scss",
+		"validate": "html-validator dist/*.html",
+		"deploy": "gh-pages -d dist"
 	},
 	"engines": {
 		"node": ">=18.20.5"
 	},
 	"repository": {
-    "type": "git",
-    "url": "https://github.com/KotcAnanacom/gulp-builder"
-  },
-  "bugs": {
-    "url": "https://github.com/KotcAnanacom/gulp-builder/issues"
-  },
+		"type": "git",
+		"url": "git+https://github.com/KotcAnanacom/gulp-builder.git"
+	},
+	"bugs": {
+		"url": "https://github.com/KotcAnanacom/gulp-builder/issues"
+	},
 	"homepage": "https://github.com/KotcAnanacom/gulp-builder/#readme",
 	"author": "kotcananacom",
-	"license": "ISC",
+	"license": "MIT",
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
 		"@babel/preset-env": "^7.26.0",
 		"babel-loader": "^9.2.1",
 		"browser-sync": "^3.0.3",
+		"chalk": "^5.4.1",
 		"css-loader": "^7.1.2",
 		"del": "^8.0.0",
 		"eslint": "^9.11.1",
+		"eslint-formatter-pretty": "^5.0.0",
+		"eslint-plugin-import": "^2.31.0",
+		"gh-pages": "^6.3.0",
+		"glob": "^11.0.0",
 		"gulp": "^5.0.0",
 		"gulp_img_transform_to_picture": "^3.2.0",
 		"gulp-autoprefixer": "^9.0.0",
@@ -52,7 +59,6 @@
 		"gulp-file-include": "^2.3.0",
 		"gulp-fonter-fix": "0.0.1",
 		"gulp-html-bem-validator": "^1.0.5",
-		"gulp-htmlhint": "^4.0.2",
 		"gulp-htmlmin": "^5.0.1",
 		"gulp-if": "^3.0.0",
 		"gulp-imagemin": "^7.1.0",
@@ -61,9 +67,12 @@
 		"gulp-plumber": "^1.2.1",
 		"gulp-postcss": "^10.0.0",
 		"gulp-pretty-html": "^2.0.10",
+		"gulp-pug": "^5.0.0",
+		"gulp-pug-linter": "^1.5.0",
 		"gulp-rename": "^2.0.0",
 		"gulp-replace": "^1.1.4",
 		"gulp-sass": "^6.0.0",
+		"gulp-sourcemaps": "^3.0.0",
 		"gulp-strip-css-comments": "^3.0.0",
 		"gulp-svg-sprite": "^2.0.3",
 		"gulp-svgmin": "^4.1.0",
@@ -77,10 +86,10 @@
 		"postcss-combine-media-query": "^1.0.1",
 		"sass": "^1.83.0",
 		"style-loader": "^4.0.0",
-		"stylelint": "^16.9.0",
-		"stylelint-config-standard-scss": "^13.1.0",
+		"stylelint": "^16.12.0",
+		"stylelint-config-standard-scss": "^14.0.0",
 		"stylelint-order": "^6.0.4",
-		"stylelint-scss": "^6.7.0",
+		"stylelint-scss": "^6.10.0",
 		"typograf": "^7.4.1",
 		"w3c-html-validator": "^1.8.2",
 		"webpack": "^5.97.1",

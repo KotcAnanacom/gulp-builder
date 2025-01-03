@@ -4,7 +4,7 @@
   }
 
   &:focus-visible {
-    outline: 2px dashed $color;
-    outline-offset: 3px;
+    outline: .125rem dashed $color;
+    outline-offset: .1875rem;
   }
 }

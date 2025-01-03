@@ -1,6 +1,5 @@
 {
-  "attr-lowercase": false,
-  "doctype-first": false
+	"doctype-first": false,
+	"attr-lowercase": true,
+	"attr-value-double-quotes": true
 }
-
-

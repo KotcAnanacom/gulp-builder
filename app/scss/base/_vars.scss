@@ -4,15 +4,15 @@ $black: #000;
 // offsets
 $offset: 1.25rem;
 
-// width and height website
-$width-web: 1920px;
-$width-min-web: 360px;
-$height-web: 1080px;
+// width and height website | required
+$width-web: 120rem;
+$width-min-web: 22.5rem;
+$height-web: 67.5rem;
 
 
 
 :root {
-	--container: 1230px;
-	--container-offset: 15px;
+	--container:  76.875rem;
+	--container-offset: .9375rem;
 	--transition: 0.3s ease-in;
 }

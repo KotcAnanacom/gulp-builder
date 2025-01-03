@@ -1,10 +1,11 @@
 /* stylelint-disable media-feature-range-notation */
 @use './vars' as *;
+@use '../mixins/media' as *;
 
 .page-body{
 	margin: 0;
   font-family: "test", sans-serif;
-  font-weight: 400;
+	font-weight: 400;
 	line-height: 1.5;
   background-color: $white;
 }
@@ -55,7 +56,7 @@
   column-gap: $offset;
   grid-template-columns: repeat(12, 1fr);
 
-  @media (max-width: 768px) {
+  @media (max-width: $tablet) {
     grid-template-columns: repeat(4, 1fr);
   }
 }
