@@ -44,7 +44,7 @@
 ├── .editorconfig     			# Настройки форматирования кода
 ├── .eslintrc.json    			# Настройки ESLint
 ├── .htmlhintrc       			# Настройки HTMLHint
-├── .pug-lintrc.json				# Линтре для Pug
+├── .pug-lintrc.json				# Линтер для Pug
 ├── .stylelintrc.json 			# Настройки Stylelint
 ├── gulpfile.js       			# Конфигурация Gulp
 ├── package.json      			# Настройки и зависимости проекта
