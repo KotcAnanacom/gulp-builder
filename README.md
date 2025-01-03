@@ -23,47 +23,46 @@
 ## Структура файлов
 ```py
 .
-├─ app                	# Главная папка для работы
-│  ├── blocks         	# HTML файлы
-│  ├── fonts          	# Шрифты
-│  ├── images         	# Изображения
-│  │   └── sprite     	# SVG-файлы для спрайтов
-│  ├── js             	# Скрипты
-│  │   ├── components 	# JS-компоненты
-│  │   └── libs       	# Библиотеки
+├─ app                			# Главная папка для работы
+│  ├── blocks         			# HTML файлы
+│  ├── fonts          			# Шрифты
+│  ├── images         			# Изображения
+│  │   └── sprite     			# SVG-файлы для спрайтов
+│  ├── js             			# Скрипты
+│  │   ├── components 			# JS-компоненты
+│  │   └── libs       			# Библиотеки
 │	 ├── pug
-│	 │ 	 ├── components	  # Pug-компоненты
-│	 │ 	 └── pages        # Страницы 
-│  ├── resources      	# Разные файлы (PHP, favicon, видео)
-│  └── scss          		# Стили
-│      ├── base      		# Базовые стили
-│      ├── components 	# SCSS-компоненты
-│      ├── libs      		# Библиотеки
-│      └── mixins    		# Миксины
+│	 │ 	 ├── components	  		# Pug-компоненты
+│	 │ 	 └── pages        		# Страницы 
+│  ├── resources      			# Разные файлы (PHP, favicon, видео)
+│  └── scss          				# Стили
+│      ├── base      				# Базовые стили
+│      ├── components 			# SCSS-компоненты
+│      ├── libs      				# Библиотеки
+│      └── mixins    				# Миксины
 │
-├── .editorconfig     	# Настройки форматирования кода
-├── .eslintignore				# Файлы/паки которые будет игнорировать Eslint
-├── .eslintrc.json    	# Настройки ESLint
-├── .htmlhintrc       	# Настройки HTMLHint
-├── .pug-lintrc.json		# Линтре для Pug
-├── .stylelintignore		# Файлы/паки которые будет игнорировать Stylelint
-├── .stylelintrc.json 	# Настройки Stylelint
-├── gulpfile.js       	# Конфигурация Gulp
-├── package.json      	# Настройки и зависимости проекта
-├── readme.txt        	# Документация сборки(сокращенный вид)
-└── README.md         	# Документация сборки
+├── .editorconfig     			# Настройки форматирования кода
+├── .eslintrc.json    			# Настройки ESLint
+├── .htmlhintrc       			# Настройки HTMLHint
+├── .pug-lintrc.json				# Линтре для Pug
+├── .stylelintrc.json 			# Настройки Stylelint
+├── gulpfile.js       			# Конфигурация Gulp
+├── package.json      			# Настройки и зависимости проекта
+├── readme.txt        			# Документация сборки(сокращенный вид)
+└── README.md         			# Документация сборки
 ```
 ### Навигация
 1. [HTML](#html)
-2. [CSS](#css)
-3. [JS](#javascript)
-4. [SVG](#SVG)
-5. [Инные ресурсы](#инные-ресурсы)
-6. [Изображения](#изображения)
-7. [Шрифты](#шрифты)
-8. [Возможности](#возможности)
-9. [Github Pages](#github-pages)
-10. [Изменения](изменения)
+2. [PUG](#pug)
+3. [CSS](#css)
+4. [JS](#javascript)
+5. [SVG](#svg)
+6. [Инные ресурсы](#инные-ресурсы)
+7. [Изображения](#изображения)
+8. [Шрифты](#шрифты)
+9. [Возможности](#возможности)
+10. [Github Pages](#github-pages)
+11. [Изменения](#изменения)
 
 
 
