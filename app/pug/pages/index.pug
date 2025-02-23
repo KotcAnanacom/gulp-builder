@@ -1,21 +1,17 @@
-doctype html
-html.page(lang="en")
-	head
-		meta(charset="UTF-8")
-		meta(name="viewport", content="width=device-width, initial-scale=1.0")
-		title gulp
-		link(rel="stylesheet", href="css/main.css")
-	body.page-body
+extends ../components/head.pug
+include ../mixins/mixins.pug
 
-		.wrapper
+block content
+	.wrapper
 
-			include ../components/header.pug
+		include ../components/header.pug
 
-			main.main
-				p.text
+		main.main
+			+menu(3 , [{ text: 'Home', href: '#' }, { text: 'About', href: '#' }, { text: 'Contacts', href: '#' }])
 
 
-			include ../components/footer.pug
+
+		include ../components/footer.pug
 
 
-		script(src="js/main.js")
+	script(src="js/main.js")

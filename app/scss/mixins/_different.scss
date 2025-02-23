@@ -1,5 +1,11 @@
 /* stylelint-disable at-rule-empty-line-before */
 @use 'sass:math';
+@use './fluid-sizes'as *;
+
+@mixin square($width: 24, $height: 24) {
+	width: #{rem($width)};
+	height: #{rem($height)};
+}
 
 @mixin ac {
   position: absolute;

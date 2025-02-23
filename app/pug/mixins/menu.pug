@@ -1,0 +1,9 @@
+mixin menu(countsSpan = 3, links = [{ text: 'Default', href: '#' }])
+  button.burger.btn-reset
+    - for (var i = 0; i < countsSpan; i++)
+      span.burger__line
+  nav.menu
+    ul.menu__list.list-reset
+      each link in links
+        li.menu__item
+          a.menu__link(href=link.href)= link.text

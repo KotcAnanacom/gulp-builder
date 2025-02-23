@@ -1,10 +1,5 @@
 "use strict";
 
-// Выбирите на чем вы хотите работать, писать только "html" или "pug"
-const markupType = 'html'; // html или pug
-
-
-
 // path
 
 const appFolder = './app/';
@@ -97,6 +92,7 @@ import woff2 from 'gulp-ttf2woff2'
 
 // others
 import browserSync from 'browser-sync'
+import ngrok from 'ngrok'
 import chalk from 'chalk'
 import { deleteAsync } from 'del'
 import fs from 'fs'
@@ -115,6 +111,10 @@ const rootFolder = pathRoot.basename(pathRoot.resolve());
 // production
 const isProd = process.argv.includes('--build');
 const isPrev = process.argv.includes('--prev');
+
+const jsonSettings = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+
+const markupType = jsonSettings.markupType
 
 if (markupType !== 'html' && markupType !== 'pug') {
   console.error(chalk.red.bold('markupType может быть только "html" или "pug"'))
@@ -452,13 +452,22 @@ export const zip = () => {
 	.pipe(dest('./'))
 };
 
+const ngrokConfig = jsonSettings.ngrok
 export const watcher = () => {
   browserSync.init({server: {
       baseDir: buildFolder,
     },
     notify: false,
-    port: 3000,
-  });
+    port: 4040,
+  }, async function(err, bs) {
+		if (ngrokConfig.enabled) {
+			const url = await ngrok.connect({
+				authtoken: ngrokConfig.authtoken,
+				addr: bs.options.get('port')
+			})
+			console.log(`ngrok server - ${chalk.bold.cyan(url)}`)
+		}
+	});
   watch(path.watch.html, html);
 	watch('dist/*.html', validateHTML);
 	watch(path.watch.pug, pug);
