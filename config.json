@@ -2,8 +2,8 @@
 	"_comment": "Выбирите на чем вы хотите работать, писать только 'html' или 'pug'",
 	"markupType": "html",
 
-	"ngrok": {
+	"localtunnel": {
 		"enabled": false,
-		"authtoken": ""
+		"subdomain": "kingoffdarkness"
 	}
 }

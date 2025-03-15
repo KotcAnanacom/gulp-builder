@@ -1,6 +1,6 @@
 {
 	"name": "gulp-building",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "gulp build for website layout",
 	"main": "gulpfile.js",
 	"type": "module",
@@ -83,7 +83,7 @@
 		"gulp-zip": "^6.0.0",
 		"htmlhint": "^1.1.4",
 		"path": "^0.12.7",
-		"ngrok": "^5.0.0-beta.2",
+		"localtunnel": "^2.0.2",
 		"postcss-combine-media-query": "^1.0.1",
 		"sass": "^1.83.0",
 		"style-loader": "^4.0.0",

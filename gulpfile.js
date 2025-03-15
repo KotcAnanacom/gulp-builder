@@ -92,7 +92,7 @@ import woff2 from 'gulp-ttf2woff2'
 
 // others
 import browserSync from 'browser-sync'
-import ngrok from 'ngrok'
+import localtunnel from "localtunnel";
 import chalk from 'chalk'
 import { deleteAsync } from 'del'
 import fs from 'fs'
@@ -179,8 +179,8 @@ export const html = () => {
 		.pipe(replace(/#img\//g, 'images/'))
 		.pipe(gulpIf(isProd, img_to_picture(config_pic)))
 		.pipe(prettyHtml({indent_size: 2}))
-		// Раскомментировать если требуется минифицированный и не минифицированный html
-		// .pipe(dest(path.build.html))
+		// Закомментировать строку ниже, если требуется минифицированный и не минифицированный html
+		.pipe(dest(path.build.html))
 		.pipe(gulpHtmlBemValidator())
 		.pipe(gulpIf(isProd, htmlMin({
 			collapseWhitespace: true,
@@ -452,7 +452,7 @@ export const zip = () => {
 	.pipe(dest('./'))
 };
 
-const ngrokConfig = jsonSettings.ngrok
+const localTunnelConfig = jsonSettings.localtunnel
 export const watcher = () => {
   browserSync.init({server: {
       baseDir: buildFolder,
@@ -460,12 +460,9 @@ export const watcher = () => {
     notify: false,
     port: 4040,
   }, async function(err, bs) {
-		if (ngrokConfig.enabled) {
-			const url = await ngrok.connect({
-				authtoken: ngrokConfig.authtoken,
-				addr: bs.options.get('port')
-			})
-			console.log(`ngrok server - ${chalk.bold.cyan(url)}`)
+		if (localTunnelConfig.enabled) {
+			const tunnel = await localtunnel({ port: bs.options.get('port'), subdomain: localTunnelConfig.subdomain })
+			console.log(`localtunnel server - ${chalk.bold.cyan(tunnel.url)}`)
 		}
 	});
   watch(path.watch.html, html);
